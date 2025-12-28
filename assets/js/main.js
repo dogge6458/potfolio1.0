@@ -257,4 +257,56 @@
     })
   });
 
+  /**
+   * Profile Carousel
+   */
+  window.addEventListener('load', () => {
+    const carousel = select('.profile-carousel');
+    if (carousel) {
+      const slides = select('.carousel-slide', true);
+      const indicators = select('.carousel-indicators .indicator', true);
+      let currentSlide = 0;
+      const slideInterval = 3000; // 3 seconds
+
+      function showSlide(index) {
+        // Remove active class from all slides and indicators
+        slides.forEach(slide => slide.classList.remove('active'));
+        indicators.forEach(indicator => indicator.classList.remove('active'));
+
+        // Add active class to current slide and indicator
+        slides[index].classList.add('active');
+        indicators[index].classList.add('active');
+      }
+
+      function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+      }
+
+      // Auto-advance slides
+      let autoSlide = setInterval(nextSlide, slideInterval);
+
+      // Manual navigation via indicators
+      indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+          currentSlide = index;
+          showSlide(currentSlide);
+          // Reset auto-advance timer
+          clearInterval(autoSlide);
+          autoSlide = setInterval(nextSlide, slideInterval);
+        });
+      });
+
+      // Pause on hover
+      carousel.addEventListener('mouseenter', () => {
+        clearInterval(autoSlide);
+      });
+
+      // Resume on mouse leave
+      carousel.addEventListener('mouseleave', () => {
+        autoSlide = setInterval(nextSlide, slideInterval);
+      });
+    }
+  });
+
 })()
